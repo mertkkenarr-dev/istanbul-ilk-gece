@@ -1,0 +1,72 @@
+/* Maket stili: harita tam ekran ve sabit; anlatı kartları solda akar. Renk ve yazı tipi kararları sitenin "gece" kimliğiyle aynı. */
+:root {
+  --zemin: #0b0f15; --kart: rgb(13 18 26 / 0.78); --cizgi: rgb(255 255 255 / 0.08);
+  --murekkep: #ebe7df; --soluk: #9aa4b1; --amber: #cc8226; --amber-acik: #f0b45a; --pembe: #e0457d; --mavi: #4796d6;
+  --baslik: 'Newsreader', Georgia, serif; --govde: 'IBM Plex Sans', system-ui, sans-serif; --mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--zemin); color: var(--murekkep); font-family: var(--govde); -webkit-font-smoothing: antialiased; }
+#harita { position: fixed; inset: 0; }
+/* klavye odağı: harita üstündeki koyu yüzeylerde de görünsün diye açık amber halka */
+:focus-visible { outline: 2px solid var(--amber-acik); outline-offset: 3px; border-radius: 2px; }
+/* metnin okunduğu sol şerit: haritayı karartır, etiket çakışmasını önler */
+body::before { content: ''; position: fixed; inset: 0 auto 0 0; width: min(44rem, 60vw); z-index: 1; pointer-events: none;
+  background: linear-gradient(to right, rgb(11 15 21 / 0.92) 0%, rgb(11 15 21 / 0.7) 55%, transparent 100%); }
+@media (max-width: 40rem) { body::before { width: 100%; inset: auto 0 0 0; height: 55vh; background: linear-gradient(to top, rgb(11 15 21 / 0.95), transparent); } }
+.ust-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 3; display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 1.5rem; background: linear-gradient(to bottom, rgb(11 15 21 / 0.85), transparent); pointer-events: none; }
+.ust-bar > * { pointer-events: auto; }
+.marka { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.02em; color: var(--soluk); }
+.bag { font-family: var(--govde); font-size: 0.85rem; color: var(--murekkep); text-decoration: none; border-bottom: 1px solid var(--amber); }
+#hikaye { position: relative; z-index: 2; pointer-events: none; }
+.bolum { min-height: 100vh; display: flex; align-items: center; padding: 6rem 1.5rem; }
+/* bulanıklık gerçek bir katman için: kart, akan haritanın üstünde okunmalı */
+.kart { pointer-events: auto; width: min(27rem, 100%); padding: 1.5rem 1.75rem; background: var(--kart); border: 1px solid var(--cizgi);
+  border-radius: 6px; backdrop-filter: blur(10px) saturate(1.1); /* avoid-ai-design-ignore: K3 */ -webkit-backdrop-filter: blur(10px) saturate(1.1);
+  opacity: 0.35; transform: translateY(8px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+.bolum.aktif .kart { opacity: 1; transform: none; }
+.kapak .kart { width: min(36rem, 100%); background: transparent; border: 0; backdrop-filter: none; padding-left: 0; }
+.ust { margin: 0 0 0.75rem; font-family: var(--govde); font-size: 0.85rem; font-weight: 600; color: var(--amber-acik); }
+.ust .no { font-family: var(--mono); font-weight: 400; color: var(--soluk); margin-right: 0.6rem; }
+h1 { margin: 0 0 1rem; font-family: var(--baslik); font-weight: 300; font-size: clamp(2.6rem, 5.5vw, 4.6rem); line-height: 1.02; letter-spacing: -0.005em; }
+h2 { margin: 0 0 0.9rem; font-family: var(--baslik); font-weight: 500; font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1.15; letter-spacing: 0; }
+.metin { margin: 0 0 1.1rem; font-size: 1rem; line-height: 1.6; color: #d6d2ca; }
+.kapak .metin { font-size: 1.2rem; max-width: 32rem; }
+.analiz { margin: 0; padding-top: 0.85rem; border-top: 1px solid var(--cizgi); font-size: 0.82rem; line-height: 1.55; color: var(--soluk); }
+.analiz span { display: block; margin-bottom: 0.2rem; color: var(--murekkep); font-weight: 600; font-size: 0.78rem; }
+#lejant { position: fixed; right: 1.25rem; bottom: 2.5rem; z-index: 3; padding: 0.8rem 1rem; background: var(--kart); border: 1px solid var(--cizgi);
+  border-radius: 6px; backdrop-filter: blur(10px); /* avoid-ai-design-ignore: K3 */ font-size: 0.78rem; color: var(--soluk); opacity: 0; transition: opacity 0.5s ease-out; }
+#lejant.gorunur { opacity: 1; }
+#lejant ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
+#lejant li { display: flex; align-items: center; gap: 0.6rem; }
+#lejant i { display: inline-block; flex: none; }
+.cizgi { width: 18px; height: 3px; border-radius: 2px; }
+.nokta { width: 10px; height: 10px; border-radius: 50%; }
+.halka { width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid var(--murekkep); background: rgb(233 230 223 / 0.3); }
+.sutun { width: 7px; height: 14px; border-radius: 1px; }
+.kutu { width: 12px; height: 12px; background: linear-gradient(to top, #1d2531, #62748f); }
+.amber { background: var(--amber); } .pembe { background: var(--pembe); } .mavi { background: var(--mavi); }
+.hata { padding: 6rem 1.5rem; color: var(--pembe); }
+.maplibregl-ctrl-attrib { background: rgb(11 15 21 / 0.6) !important; color: var(--soluk) !important; }
+.maplibregl-ctrl-attrib a { color: var(--soluk) !important; }
+@media (max-width: 40rem) {
+  .bolum { align-items: flex-end; padding: 5rem 0.75rem 2rem; }
+  .kart { width: 100%; }
+  #lejant { left: 0.75rem; right: auto; top: 3.5rem; bottom: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .kart { transition: none; } }
+/* kişisel giriş: anlatıcının sesi, veri bölümlerinden ayrışsın diye serif italik */
+.baslangic .kart { width: min(31rem, 100%); }
+.baslangic .metin { font-family: var(--baslik); font-style: italic; font-size: 1.18rem; line-height: 1.55; color: var(--murekkep); }
+/* çalışma notu: bulgunun hangi veriden ve nasıl hesaplandığı; satır etiketi solda, metin sağda */
+.defter { margin: 0; padding-top: 0.85rem; border-top: 1px solid var(--cizgi); display: grid; gap: 0.6rem; }
+.defter div { display: grid; grid-template-columns: 3.75rem 1fr; gap: 0.75rem; }
+.defter dt { font-size: 0.78rem; font-weight: 600; color: var(--murekkep); }
+.defter dd { margin: 0; font-size: 0.82rem; line-height: 1.5; color: #c4c9d1; }
+.defter .hesap dd { font-family: var(--mono); font-size: 0.78rem; color: var(--amber-acik); }
+/* boyut lejantı: daireler haritadakiyle aynı piksel ölçeğinde */
+#lejant .baslik { color: var(--murekkep); font-size: 0.78rem; max-width: 15rem; }
+#lejant .olcekler { display: flex; align-items: flex-end; gap: 1rem; padding: 0.2rem 0 0.1rem; }
+.olcek { display: inline-flex; flex-direction: column; align-items: center; gap: 0.3rem; font-size: 0.72rem; }
+.olcek i { border-radius: 50%; background: rgb(224 69 125 / 0.55); border: 1px solid var(--pembe); }
+.nokta.soluk { width: 4px; height: 4px; margin: 0 3px; background: rgb(233 230 223 / 0.45); }

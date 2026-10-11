@@ -1,0 +1,19 @@
+# ham ve üretilen veri repoya girmez; hat `python scripts/hat.py` ile yeniden üretir
+data/raw/**
+!data/raw/**/
+!data/raw/external/KAYNAKLAR.md
+data/interim/
+data/processed/
+.venv/
+.venv-oq/
+__pycache__/
+*.pyc
+.DS_Store
+.ruff_cache/
+
+# web: bağımlılıklar ve derleme çıktısı
+node_modules/
+web/dist/
+# harita karoları büyük (altlık ~78 MB); hat üretir, yayında ayrı barındırılır (README, Yayın)
+web/public/veri/*.pmtiles
+.claude/settings.local.json

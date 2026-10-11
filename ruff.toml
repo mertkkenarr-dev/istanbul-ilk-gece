@@ -1,0 +1,6 @@
+line-length = 160
+target-version = "py312"
+[lint]
+select = ["E", "F", "W", "I", "B"]
+# E501: tablo ve docstring satırları bilinçli uzun; B905: zip uzunlukları önceden doğrulanıyor; E741/E701: matematik notasyonu (I, tek satır if)
+ignore = ["E702", "E731", "B023", "E501", "B905", "E741", "E701"]

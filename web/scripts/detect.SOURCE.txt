@@ -1,0 +1,1 @@
+avoid-ai-design/scripts/detect.mjs @ 2b7c71836b06cdf6b3d73265b56490c1b75ad5aa (MIT, funboy322). Salt-okunur statik tarayici: yalniz fs+path, ag/process yok.

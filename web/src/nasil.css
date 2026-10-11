@@ -1,0 +1,47 @@
+/* Nasıl yaptık: harita yok, okuma sayfası. Aynı gece paleti; uzun metin için daha sakin yüzey ve dar satır. */
+.sayfa-nasil { background: var(--zemin); }
+.sayfa-nasil::before { display: none; }
+/* yapışkan üst çubuk akan metnin üstünde kalır; bulanıklık bu katmanı ayırır */
+.ust-bar.sabit { position: sticky; background: rgb(11 15 21 / 0.92); backdrop-filter: blur(8px); /* avoid-ai-design-ignore: K3 */ border-bottom: 1px solid var(--cizgi); }
+.geri { text-decoration: none; color: var(--soluk); }
+.geri:hover, .geri:focus-visible { color: var(--murekkep); }
+.bag.etkin { cursor: default; }
+.nasil-duzen { display: grid; grid-template-columns: 15rem minmax(0, 44rem); gap: 4rem; justify-content: center; padding: 4rem 1.5rem 8rem; }
+.icindekiler { position: sticky; top: 5rem; align-self: start; font-size: 0.82rem; }
+.icindekiler ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; border-left: 1px solid var(--cizgi); }
+.icindekiler a { display: block; padding-left: 1rem; margin-left: -1px; border-left: 1px solid transparent; color: var(--soluk); text-decoration: none; line-height: 1.4; }
+.icindekiler a:hover, .icindekiler a:focus-visible { color: var(--murekkep); }
+.icindekiler a.aktif { color: var(--amber-acik); border-left-color: var(--amber); }
+.nasil-metin { font-size: 1rem; line-height: 1.7; color: #d6d2ca; }
+.nasil-metin h1 { margin-bottom: 1.25rem; }
+.nasil-metin .spot { font-family: var(--baslik); font-size: 1.3rem; line-height: 1.5; color: var(--murekkep); margin: 0 0 3rem; }
+.nasil-metin h2 { margin: 4rem 0 1.25rem; padding-top: 1.5rem; border-top: 1px solid var(--cizgi); scroll-margin-top: 5rem; }
+.nasil-metin h3 { font-family: var(--govde); font-size: 1rem; margin: 2rem 0 0.75rem; color: var(--murekkep); }
+.nasil-metin strong { color: var(--murekkep); font-weight: 600; }
+.nasil-metin hr { display: none; }
+.nasil-metin a { color: var(--amber-acik); }
+.nasil-metin code { font-family: var(--mono); font-size: 0.82em; padding: 0.1em 0.35em; border-radius: 3px; background: rgb(255 255 255 / 0.06); color: var(--murekkep); }
+.nasil-metin ol, .nasil-metin ul { padding-left: 1.25rem; }
+.nasil-metin li { margin-bottom: 0.5rem; }
+.nasil-metin blockquote { margin: 1.5rem 0; padding: 0.25rem 0 0.25rem 1.25rem; border-left: 2px solid var(--amber); color: var(--murekkep); }
+.tablo { overflow-x: auto; margin: 1.5rem 0 2rem; border: 1px solid var(--cizgi); border-radius: 6px; }
+.tablo:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.tablo table { width: 100%; border-collapse: collapse; font-size: 0.85rem; line-height: 1.5; }
+.tablo th { text-align: left; font-size: 0.8rem; font-weight: 600; color: var(--murekkep); background: rgb(255 255 255 / 0.03); }
+.tablo th, .tablo td { padding: 0.6rem 0.85rem; border-bottom: 1px solid var(--cizgi); vertical-align: top; }
+.tablo tr:last-child td { border-bottom: 0; }
+.tablo td:first-child { color: var(--murekkep); }
+@media (max-width: 60rem) {
+  .nasil-duzen { grid-template-columns: minmax(0, 1fr); gap: 2rem; padding-top: 2.5rem; }
+  .icindekiler { position: static; }
+}
+.icindekiler summary { list-style: none; cursor: pointer; margin-bottom: 0.75rem; }
+.icindekiler summary::-webkit-details-marker { display: none; }
+@media (min-width: 60.01rem) { .icindekiler summary { pointer-events: none; } }
+@media (max-width: 60rem) {
+  .icindekiler { padding: 0.75rem 1rem; border: 1px solid var(--cizgi); border-radius: 6px; }
+  .icindekiler summary { margin: 0; }
+  .icindekiler summary::after { content: ' +'; color: var(--soluk); }
+  .icindekiler details[open] summary { margin-bottom: 0.75rem; }
+  .icindekiler details[open] summary::after { content: ' −'; }
+}

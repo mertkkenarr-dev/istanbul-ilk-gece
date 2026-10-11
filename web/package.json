@@ -1,0 +1,32 @@
+{
+  "name": "istanbul-72-saat-web",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --port 5273",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint src test",
+    "test": "vitest run",
+    "slop": "node scripts/detect.mjs src index.html nasil.html"
+  },
+  "dependencies": {
+    "@deck.gl/core": "9.4.0",
+    "@deck.gl/geo-layers": "9.4.0",
+    "@deck.gl/layers": "9.4.0",
+    "@deck.gl/mapbox": "9.4.0",
+    "@protomaps/basemaps": "5.7.2",
+    "maplibre-gl": "6.11.2",
+    "marked": "12.0.2",
+    "pmtiles": "4.5.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "vite": "8.3.4",
+    "oxlint": "1.87.0",
+    "vitest": "5.0.3"
+  }
+}
