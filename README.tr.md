@@ -2,6 +2,8 @@
 
 [English](README.md) | **Türkçe**
 
+**Canlı site:** https://mertkkenarr-dev.github.io/istanbul-ilk-gece/?lang=tr
+
 Bir veri analizi vakası: büyük bir İstanbul depreminin ilk gecesinde insanlar yürüyerek nereye gidebilir, ve oralarda yer var mı?
 
 Proje, 23 Nisan 2025 Silivri depreminde (Mw 6,2) Esenyurt Turgut Özal Mahallesi'nde yaşarken görülen kalabalıktan çıkan bir soruyla
@@ -70,7 +72,7 @@ katmanları `ihtiyac/w01`–`w06` ile üretilir, `w07` siteye kopyalar.
 
 Site statik: `npm --prefix web run build` çıktısı (`web/dist`) herhangi bir statik barındırmaya konabilir. Harita karoları
 (`altlik.pmtiles` ~78 MB, `binalar.pmtiles` ~13 MB) repoya girmez; hat üretir, `ihtiyac/w07_web_veri.py` siteye kopyalar. PMTiles
-HTTP aralık isteğiyle okunduğu için barındırmanın `Range` desteklemesi yeterli (GitHub Pages, Cloudflare R2 ya da benzeri).
+HTTP aralık isteğiyle okunduğu için barındırmanın `Range` desteklemesi yeterli (GitHub Pages, Cloudflare R2 ya da benzeri). Canlı site, harita karoları dahil derlenmiş `web/dist`'in `gh-pages` dalına itilmiş hali.
 
 ## Belgeler
 

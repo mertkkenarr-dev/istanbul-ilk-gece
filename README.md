@@ -2,6 +2,8 @@
 
 **English** | [Türkçe](README.tr.md)
 
+**Live site:** https://mertkkenarr-dev.github.io/istanbul-ilk-gece/?lang=en
+
 A data analysis case study: on the first night after a major Istanbul earthquake, where can people walk to, and is there space for
 them there?
 
@@ -75,7 +77,7 @@ downloads it. Map layers are built by `ihtiyac/w01`–`w06` and copied to the si
 The site is static: the output of `npm --prefix web run build` (`web/dist`) can go on any static host. The map tiles
 (`altlik.pmtiles` ~78 MB, `binalar.pmtiles` ~13 MB) are not in the repository; the pipeline builds them and
 `ihtiyac/w07_web_veri.py` copies them to the site. PMTiles is read with HTTP range requests, so any host with `Range` support works
-(GitHub Pages, Cloudflare R2 or similar).
+(GitHub Pages, Cloudflare R2 or similar). The live site is the built `web/dist`, map tiles included, pushed to the `gh-pages` branch.
 
 ## Documents
 
