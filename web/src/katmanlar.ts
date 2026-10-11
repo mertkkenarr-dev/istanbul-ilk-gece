@@ -65,7 +65,7 @@ export function aracIzleri(c: Cikis): Iz[] {
 
 export interface Durum { silivri: number; istanbul: number; akis: number; yersiz: number; alan: number; cikis: number; hastane: number; zaman: number; nabiz: number }
 
-export function katmanlar(d: Durum, iz: Iz[], arac: Iz[], a: Akis, c: Cikis, m: Maket, ist: Istanbul): Layer[] {
+export function katmanlar(d: Durum, iz: Iz[], arac: Iz[], a: Akis, c: Cikis, m: Maket, ist: Istanbul, ilceEtiket: (ad: string, kisi: number, oran: number) => string): Layer[] {
   const k: Layer[] = []
   if (d.istanbul > 0.01) {
     type M = Istanbul['mahalle'][number]
@@ -84,7 +84,7 @@ export function katmanlar(d: Durum, iz: Iz[], arac: Iz[], a: Akis, c: Cikis, m: 
     }), new TextLayer({
       // etiket kümenin dışına, denize ve kuzeye çekilip ilçeye ince çizgiyle bağlanır; yan yana ilçeler daireleri örtmesin
       id: 'istanbul-ilce', data: etiketli, getPosition: (i: IlceS) => ILCE_ETIKET[i.ad]!,
-      getText: (i: IlceS) => `${i.ad}\n${Math.round(i.yersiz / 1000)} bin kişi, %${Math.round(i.oran * 100)}`,
+      getText: (i: IlceS) => ilceEtiket(i.ad, i.yersiz, i.oran),
       characterSet: 'auto', fontFamily: 'IBM Plex Sans, sans-serif', fontWeight: 500, getSize: 12, lineHeight: 1.3,
       getColor: [246, 226, 233], background: true, parameters: { depthCompare: 'always' }, getBackgroundColor: [11, 15, 21, 230], backgroundPadding: [6, 4],
       opacity: d.istanbul,

@@ -12,11 +12,22 @@ import { Protocol } from 'pmtiles'
 import isciAdresi from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import { altlik } from './altlik'
 import { bolumler, type Bolum } from './bolumler'
-import { SILIVRI, aracIzleri, katmanlar, yuruyusIzleri, type Durum, yerYaricap } from './katmanlar'
+import { hikaye, lejant } from './anlati'
+import { ARAYUZ, dilAdresi, dilSec } from './dil'
+import { SILIVRI, aracIzleri, katmanlar, yuruyusIzleri, type Durum } from './katmanlar'
 import { AkisSema, CikisSema, IstanbulSema, MaketSema, getir } from './sema'
 import { daire } from './geo'
 
 const KOK = import.meta.env.BASE_URL
+const DIL = dilSec()
+const A = ARAYUZ[DIL]
+
+/** Üst çubuk ve sayfa başlığı seçilen dilde; dil bağlantısı aynı sayfanın öbür dildeki adresine gider. */
+function ustBar(): void {
+  document.title = A.baslikAna
+  const bar = document.getElementById('ust-bar')!
+  bar.innerHTML = `<span class="marka">${A.marka}</span><nav class="ust-baglar"><a href="${dilAdresi(DIL === 'tr' ? 'en' : 'tr')}" class="dil" hreflang="${DIL === 'tr' ? 'en' : 'tr'}" aria-label="${A.oburDilAd}">${A.oburDil}</a><a href="./nasil.html?lang=${DIL}" class="bag">${A.nasilYaptik}</a></nav>`
+}
 /** Odak noktası metin kartının arkasında kalmasın: geniş ekranda haritanın görünen kısmı kartın sağı. */
 function kenar(): { left: number; top: number; right: number; bottom: number } {
   const w = window.innerWidth
@@ -28,7 +39,7 @@ async function baslat(): Promise<void> {
   maplibregl.addProtocol('pmtiles', new Protocol().tile)
   const [akis, cikis, ist, maket] = await Promise.all([getir(KOK, 'toplanma_akis.json', AkisSema), getir(KOK, 'ilce_cikis.json', CikisSema),
     getir(KOK, 'istanbul_yersiz.json', IstanbulSema), getir(KOK, 'maket.json', MaketSema)])
-  const bol = bolumler(maket.turgut.merkez, maket.esenyurt.merkez)
+  const bol = bolumler(maket.turgut.merkez, maket.esenyurt.merkez, DIL)
   const ilk = bol[0]!.kamera
   const harita = new maplibregl.Map({ container: 'harita', style: altlik(KOK), ...ilk, maxPitch: 70, attributionControl: { compact: true },
     interactive: true, scrollZoom: false })
@@ -44,7 +55,7 @@ async function baslat(): Promise<void> {
     harita.addLayer({ id: 'turgut-etiket', type: 'symbol', source: 'turgut-ad', layout: { 'text-field': ['get', 'ad'], 'text-font': ['Noto Sans Medium'], 'text-size': 13,
       'text-offset': [0, -1.6], 'text-allow-overlap': true }, paint: { 'text-color': '#f3e7cc', 'text-halo-color': '#0b0f15', 'text-halo-width': 1.6, 'text-opacity': 0,
       'text-opacity-transition': { duration: 900 } } })
-    harita.addSource('silivri', { type: 'geojson', data: { type: 'Feature', properties: { ad: '23 Nisan 2025\nMw 6,2' }, geometry: { type: 'Point', coordinates: SILIVRI } } })
+    harita.addSource('silivri', { type: 'geojson', data: { type: 'Feature', properties: { ad: A.silivri }, geometry: { type: 'Point', coordinates: SILIVRI } } })
     harita.addLayer({ id: 'silivri-etiket', type: 'symbol', source: 'silivri', layout: { 'text-field': ['get', 'ad'], 'text-font': ['Noto Sans Medium'], 'text-size': 12,
       'text-anchor': 'top', 'text-offset': [0, 0.9], 'text-allow-overlap': true }, paint: { 'text-color': '#f0b45a', 'text-halo-color': '#0b0f15', 'text-halo-width': 1.6,
       'text-opacity': 0, 'text-opacity-transition': { duration: 900 } } })
@@ -53,8 +64,8 @@ async function baslat(): Promise<void> {
       'line-opacity-transition': { duration: 900 } } })
     const rGerek = Math.sqrt(maket.kamp_m2 / Math.PI), rVar = Math.sqrt(maket.mevcut_m2 / Math.PI)
     harita.addSource('kamp', { type: 'geojson', data: { type: 'FeatureCollection', features: [
-      { type: 'Feature', properties: { tur: 'gerek', ad: `gereken kamp alanı\n${maket.kamp_m2.toLocaleString('tr-TR')} m²` }, geometry: daire(maket.turgut.merkez, rGerek) },
-      { type: 'Feature', properties: { tur: 'var', ad: `mevcut açık alan\n${maket.mevcut_m2.toLocaleString('tr-TR')} m²` }, geometry: daire(maket.turgut.merkez, rVar) }] } })
+      { type: 'Feature', properties: { tur: 'gerek', ad: A.kamp(maket.kamp_m2) }, geometry: daire(maket.turgut.merkez, rGerek) },
+      { type: 'Feature', properties: { tur: 'var', ad: A.mevcut(maket.mevcut_m2) }, geometry: daire(maket.turgut.merkez, rVar) }] } })
     harita.addLayer({ id: 'kamp-dolgu', type: 'fill', source: 'kamp', paint: { 'fill-color': ['match', ['get', 'tur'], 'gerek', '#cc8226', '#e9e6df'],
       'fill-opacity': 0, 'fill-opacity-transition': { duration: 900 } } })
     harita.addLayer({ id: 'kamp-cizgi', type: 'line', source: 'kamp', paint: { 'line-color': ['match', ['get', 'tur'], 'gerek', '#f0b45a', '#e9e6df'], 'line-width': 2,
@@ -76,7 +87,7 @@ async function baslat(): Promise<void> {
     for (const k of ['silivri', 'istanbul', 'akis', 'yersiz', 'alan', 'cikis', 'hastane'] as const) durum[k] += ((hedef[k] ?? 0) - durum[k]) * a
     durum.zaman = ((t - t0) / 1000) * 60
     durum.nabiz = 0.5 + 0.5 * Math.sin((t - t0) / 600)
-    overlay.setProps({ layers: katmanlar(durum, iz, arac, akis, cikis, maket, ist) })
+    overlay.setProps({ layers: katmanlar(durum, iz, arac, akis, cikis, maket, ist, A.ilce) })
     requestAnimationFrame(dongu)
   }
   requestAnimationFrame(dongu)
@@ -89,60 +100,13 @@ async function baslat(): Promise<void> {
     op('silivri-etiket', 'text-opacity', b.katman.silivri ? 1 : 0)
     op('esenyurt-cizgi', 'line-opacity', b.sinir ? 0.9 : 0)
     op('kamp-dolgu', 'fill-opacity', b.kamp ? 0.18 : 0); op('kamp-cizgi', 'line-opacity', b.kamp ? 1 : 0); op('kamp-etiket', 'text-opacity', b.kamp ? 1 : 0)
-    lejant(b)
+    lejant(b, A)
   }
-  hikaye(bol, sahne)
+  hikaye(bol, sahne, A)
 }
 
-function hikaye(bol: Bolum[], sahne: (b: Bolum) => void): void {
-  const kok = document.getElementById('hikaye')!
-  kok.innerHTML = bol.map((b, i) => `
-    <section class="bolum ${i === 0 ? 'kapak' : b.id}" data-i="${i}">
-      <article class="kart">
-        ${i === 0 ? '' : `<p class="ust"><span class="no">${String(i).padStart(2, '0')}</span>${b.ust}</p>`}
-        ${i === 0 ? `<p class="ust">${b.ust}</p><h1>${b.baslik}</h1>` : `<h2>${b.baslik}</h2>`}
-        <p class="metin">${b.metin}</p>
-        ${b.defter ? `<dl class="defter">
-          <div><dt>Veri</dt><dd>${b.defter.veri}</dd></div>
-          <div><dt>Nasıl</dt><dd>${b.defter.nasil}</dd></div>
-          ${b.defter.hesap ? `<div class="hesap"><dt>Hesap</dt><dd>${b.defter.hesap}</dd></div>` : ''}
-        </dl>` : `<p class="analiz"><span>Analiz</span>${b.analiz ?? ''}</p>`}
-      </article>
-    </section>`).join('')
-  let aktif = -1
-  const io = new IntersectionObserver((g) => {
-    for (const e of g) {
-      if (!e.isIntersecting) continue
-      const i = Number((e.target as HTMLElement).dataset.i)
-      if (i === aktif) continue
-      aktif = i
-      document.querySelectorAll('.bolum').forEach((el, j) => el.classList.toggle('aktif', j === i))
-      sahne(bol[i]!)
-    }
-  }, { rootMargin: '-45% 0px -45% 0px' })
-  kok.querySelectorAll('.bolum').forEach((el) => io.observe(el))
-}
-
-function lejant(b: Bolum): void {
-  const el = document.getElementById('lejant')!
-  const k = b.katman
-  const satir: string[] = []
-  if (k.akis) satir.push('<li><i class="cizgi amber"></i>toplanma alanına yürüyen insanlar</li>')
-  if (k.istanbul) {
-    const daire = (n: number) => { const d = 2 * yerYaricap(n); return `<span class="olcek"><i style="width:${d}px;height:${d}px"></i>${n / 1000} bin</span>` }
-    satir.push(`<li class="baslik">Her daire bir mahalle: 1 km içinde yer bulamayan kişi</li><li class="olcekler">${[5000, 20000, 50000].map(daire).join('')}</li>`,
-      '<li><i class="nokta soluk"></i>herkesin yer bulduğu mahalle</li>')
-  }
-  if (k.yersiz) satir.push('<li><i class="nokta pembe"></i>1 km içinde yer bulamayan (alan ∝ kişi)</li>')
-  if (k.alan) satir.push('<li><i class="halka"></i>açık alan; dolgu doluluk oranı</li>')
-  if (k.cikis) satir.push('<li><i class="cizgi amber"></i>ilçeden çıkan ana yol, kalınlık ∝ kapasite</li>')
-  if (k.hastane) satir.push('<li><i class="sutun mavi"></i>hastane, yükseklik ∝ tahmini yatak</li>')
-  if (b.id === 'kalabalik' || b.id === 'yakin') satir.push('<li><i class="kutu"></i>bina yüksekliği (kat sayısı ML tahmini)</li>')
-  el.innerHTML = satir.length ? `<ul>${satir.join('')}</ul>` : ''
-  el.classList.toggle('gorunur', satir.length > 0)
-}
-
+ustBar()
 baslat().catch((e: unknown) => {
   const el = document.getElementById('hikaye')!
-  el.innerHTML = `<p class="hata">Harita yüklenemedi: ${e instanceof Error ? e.message : String(e)}</p>`
+  el.innerHTML = `<p class="hata">${A.haritaYok}: ${e instanceof Error ? e.message : String(e)}</p>`
 })

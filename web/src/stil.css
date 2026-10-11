@@ -17,6 +17,10 @@ body::before { content: ''; position: fixed; inset: 0 auto 0 0; width: min(44rem
   padding: 1rem 1.5rem; background: linear-gradient(to bottom, rgb(11 15 21 / 0.85), transparent); pointer-events: none; }
 .ust-bar > * { pointer-events: auto; }
 .marka { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.02em; color: var(--soluk); }
+/* dil geçişi: küçük, sakin; ana bağlantı "Nasıl yaptık" */
+.ust-baglar { display: flex; align-items: center; gap: 1.25rem; }
+.dil { font-family: var(--mono); font-size: 0.8rem; color: var(--soluk); text-decoration: none; padding: 0.25rem 0; }
+.dil:hover { color: var(--murekkep); }
 .bag { font-family: var(--govde); font-size: 0.85rem; color: var(--murekkep); text-decoration: none; border-bottom: 1px solid var(--amber); }
 #hikaye { position: relative; z-index: 2; pointer-events: none; }
 .bolum { min-height: 100vh; display: flex; align-items: center; padding: 6rem 1.5rem; }

@@ -78,3 +78,6 @@ noktası 2025 Silivri'de Esenyurt Turgut Özal'daki deneyimi.
   `?worker&url` ile veriliyor (yoksa altlık yüklenmiyor).
 - Açık: `web/public/veri/altlik.pmtiles` ~78 MB; git'e koymak yerine yayında ayrı barındırma (ör. Git LFS ya da nesne deposu) düşünülmeli.
   Mobilde lejant yoğun kümeyi kısmen örtüyor. Ana JS paketi ~1,9 MB (harita kütüphaneleri).
+- 2026-10-12 son: proje adı "İstanbul: İlk Gece" / "Istanbul: The First Night" (repo `istanbul-ilk-gece`); site iki dilli
+  (`?lang=tr|en`, metinler `web/src/metin/`, İngilizce yöntem sayfası `docs/web_metin/HOW_WE_DID_IT.md`); README İngilizce,
+  `README.tr.md` Türkçe. 2017 verisi yıl karışması metinde açıkça işaretlendi (kişi/bina aralık, yaş oranı "2017 sayımında").

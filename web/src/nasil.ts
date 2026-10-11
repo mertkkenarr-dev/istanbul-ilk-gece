@@ -5,14 +5,25 @@
 import './stil.css'
 import './nasil.css'
 import { marked } from 'marked'
-import ham from '../../docs/web_metin/NASIL_YAPTIK.md?raw'
+import hamTr from '../../docs/web_metin/NASIL_YAPTIK.md?raw'
+import hamEn from '../../docs/web_metin/HOW_WE_DID_IT.md?raw'
+import { ARAYUZ, dilAdresi, dilSec } from './dil'
+
+const DIL = dilSec()
+const A = ARAYUZ[DIL]
+const obur = DIL === 'tr' ? 'en' : 'tr'
+document.title = A.baslikNasil
+document.getElementById('ust-bar')!.innerHTML = `<a href="./?lang=${DIL}" class="marka geri">${A.hikayeyeDon}</a><nav class="ust-baglar"><a href="${dilAdresi(obur)}" class="dil" hreflang="${obur}" aria-label="${A.oburDilAd}">${A.oburDil}</a><span class="bag etkin" aria-current="page">${A.nasilYaptik}</span></nav>`
+document.getElementById('icindekiler-baslik')!.textContent = A.icindekiler
+document.querySelector('.icindekiler')!.setAttribute('aria-label', A.icindekiler)
+const ham = DIL === 'tr' ? hamTr : hamEn
 
 const kok = document.getElementById('nasil')!
 const liste = document.getElementById('icindekiler')!
 
 const govde = ham.replace(/^# .*\n+/, '').replace(/^(>.*\n)+/m, '')
-kok.innerHTML = `<p class="ust">Yöntem</p><h1>Nasıl yaptık</h1>
-  <p class="spot">Verinin nereden geldiği, nasıl temizlendiği, hangi modelin neden seçildiği ve nerede durduğumuz. Teknik olmayan bir okur için yazıldı; her bölüm aynı sırayla ilerliyor: ne, neden, nasıl, ne çıktı, sınırı ne.</p>
+kok.innerHTML = `<p class="ust">${A.yontem}</p><h1>${A.nasilYaptik}</h1>
+  <p class="spot">${A.spot}</p>
   ${marked.parse(govde, { async: false })}`
 
 // tablolar dar ekranda yatay kaysın, sayfa taşmasın

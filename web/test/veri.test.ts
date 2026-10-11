@@ -35,4 +35,12 @@ describe('veri dosyaları', () => {
     expect(b.filter((x) => !x.defter).map((x) => x.id)).toEqual(['kapak', 'baslangic'])
     expect(new Set(b.map((x) => x.id)).size).toBe(b.length)
   })
+
+  it('İngilizce metin aynı bölümleri ve aynı sayıları taşıyor', () => {
+    const t = bolumler(maket.turgut.merkez, maket.esenyurt.merkez, 'tr'), e = bolumler(maket.turgut.merkez, maket.esenyurt.merkez, 'en')
+    expect(e.map((x) => [x.id, Boolean(x.defter)])).toEqual(t.map((x) => [x.id, Boolean(x.defter)]))
+    // binlik ayırıcı ve "bin"/"k" dile göre değişir; rakam dizisi değişmemeli
+    const rakam = (s: string) => s.replace(/(\d) ?(?:bin\b|k\b)/g, '$1000').replace(/[.,](?=\d{3}\b)/g, '').match(/\d+(?:[.,]\d+)?/g)?.map((n) => n.replace(',', '.')) ?? []
+    for (const [i, x] of t.entries()) expect(rakam(e[i]!.defter?.hesap ?? ''), x.id).toEqual(rakam(x.defter?.hesap ?? ''))
+  })
 })
